@@ -1,28 +1,31 @@
-import React, { useState } from "react";
-import { View , Text,StyleSheet, TouchableOpacity} from "react-native";
-import api from "../services/api";
+import React, {useState} from "react";
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
-export default function Index({navigation}) {
-  
-  function logout(){
-    localStorage.clear();
-    api.get('logout').then(response =>{
-      console.log(response);
-      navigation.navigate('Login');
-    }).catch(err=> {
-      console.log(err);
-    });  
+import logo from '../assets/logo.png';
+import Login from "./Login";
+
+export default function EsqueciSenha( {navigation} ) {
+
+  const[email, setEmail] = useState('');
+
+  function singin(){
+    console.log(email)
+    if(email === 'jesse.zorzela4242@gmail.com'){
+          navigation.navigate('Index')
+      }else{
+        alert('a senha esta errada');
+      }  
   }
-
+  
   function cadastro(){
     console.log(email)
           navigation.navigate('Cadastro')
   }
-  function esquecisenha(){
+  function voltar(){
     console.log(email)
-          navigation.navigate('EsqueciSenha')
+          navigation.navigate('Login')
   }
-  
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -30,10 +33,11 @@ export default function Index({navigation}) {
         style={styles.background}>
         <Image source={logo} style={styles.logo} />
         <View style={styles.formGroup}>
-          <Text style={styles.label}>E-mail</Text>
+          <Text style={styles.label}>Redefina sua Senha</Text>
           <TextInput style={styles.input}
-            keyboardType="email-address"
-            placeholder="E-mail"
+            secureTextEntry={true}
+            keyboardType="visible-password"
+            placeholder="Redefina sua Senha:"
             placeholderTextColor="#999"
             autoCapitalize='none'
             autoCorrect={false}
@@ -42,44 +46,17 @@ export default function Index({navigation}) {
             value={email}
           ></TextInput>
         </View>
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Senha</Text>
-          <TextInput style={styles.input}
-            secureTextEntry={true}
-            keyboardType="visible-password"
-            placeholder="Digite sua Senha:"
-            placeholderTextColor="#999"
-            autoCapitalize='none'
-            autoCorrect={false}
-            name='password'
-            onChangeText={setPassword}
-            value={password}
-          ></TextInput>
-        </View>
 
         <TouchableOpacity 
         style={[styles.button, styles.backgroundButton]}
-        onPress={singin}
         >
-          <Text style={styles.text}>Logar</Text>
+          <Text style={styles.text}>Redefinir</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-         style={styles.button}
-         onPress={cadastro}
-         >
-          <Text style={styles.text}>Faça seu cadastro!</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.esqueci}>
-          <Text style={styles.text}
-          onPress={esquecisenha}
-          >Esqueci minha senha</Text>
+        <TouchableOpacity style={styles.voltar}
+        onPress={voltar}>
+          <Text style={styles.text}>Voltar</Text>
           <Text>{email}</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity onPress={logout}>
-              <Text>logout</Text>
-           </TouchableOpacity>
-
       </LinearGradient>
     </View>
   );
@@ -154,16 +131,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: '#fff',
   },
-  esqueci: {
+  voltar: {
     position: 'absolute',
     bottom: 10,
   }
 });
-
-    
-
-  
-
-
-
-

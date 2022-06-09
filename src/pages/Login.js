@@ -1,10 +1,44 @@
-import React from "react";
+import React, {useState} from "react";
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-
+import api from '../services/api'
 import logo from '../assets/logo.png';
+import EsqueciSenha from "./EsqueciSenha"
 
-export default function Login() {
+export default function Login( {navigation} ) {
+  const[email, setEmail] = useState('cedrick07@example.net');
+  const[password, setPassword] = useState('password');
+
+  useState(() => {
+    console.log(localStorage.getItem('token'));
+    if(localStorage.getItem('token') !== null){
+      navigation.navigate('Index')
+    }
+  },[localStorage]);
+  function singin(){
+    api.post('login', {
+     email: email,
+     password : password
+    }).then( async response => {
+      console.log(response.data);
+      const token  = response.data.acess_token;
+      localStorage.setItem('token', token);
+      //api.headers.Authorization = `Bearer ${token}`;
+      navigation.navigate('Index');
+    }).catch(err => {
+      alert ('Usuario ou senha incorretos');
+    });
+  }
+  
+  function cadastro(){
+    console.log(email)
+          navigation.navigate('Cadastro')
+  }
+  function esquecisenha(){
+    console.log(email)
+          navigation.navigate('EsqueciSenha')
+  }
+  
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -14,12 +48,14 @@ export default function Login() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>E-mail</Text>
           <TextInput style={styles.input}
-            secureTextEntry={true}
             keyboardType="email-address"
             placeholder="E-mail"
             placeholderTextColor="#999"
             autoCapitalize='none'
             autoCorrect={false}
+            name='email'
+            onChangeText={setEmail}
+            value={email}
           ></TextInput>
         </View>
         <View style={styles.formGroup}>
@@ -31,17 +67,29 @@ export default function Login() {
             placeholderTextColor="#999"
             autoCapitalize='none'
             autoCorrect={false}
+            name='password'
+            onChangeText={setPassword}
+            value={password}
           ></TextInput>
         </View>
 
-        <TouchableOpacity style={[styles.button, styles.backgroundButton]}>
+        <TouchableOpacity 
+        style={[styles.button, styles.backgroundButton]}
+        onPress={singin}
+        >
           <Text style={styles.text}>Logar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+         style={styles.button}
+         onPress={cadastro}
+         >
           <Text style={styles.text}>Faça seu cadastro!</Text>
         </TouchableOpacity >
         <TouchableOpacity style={styles.esqueci}>
-          <Text style={styles.text}>Esqueci minha senha</Text>
+          <Text style={styles.text}
+          onPress={esquecisenha}
+          >Esqueci minha senha</Text>
+          <Text>{email}</Text>
           </TouchableOpacity>
       </LinearGradient>
     </View>
