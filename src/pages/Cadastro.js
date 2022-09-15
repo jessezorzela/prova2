@@ -41,6 +41,7 @@ export default function Cadastro( {navigation} ) {
   
   return (
     <View style={styles.container}>
+      
       <LinearGradient
         colors={['#0E5CBB', '#2E75E7']}
         style={styles.background}>
